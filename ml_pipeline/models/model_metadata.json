@@ -1,0 +1,8 @@
+{
+    "best_model": "RandomForest",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "trained_at": "2026-06-14T10:23:51.515015Z"
+}

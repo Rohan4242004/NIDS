@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # 1. MySQL Database Service
+  db:
+    image: mysql:8.0
+    container_name: nids-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: nids
+      MYSQL_USER: nids_user
+      MYSQL_PASSWORD: nids_password_123
+      MYSQL_ROOT_PASSWORD: nids_root_password_456
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # 2. FastAPI Backend API Service
+  backend:
+    build: ./backend
+    container_name: nids-backend
+    restart: always
+    environment:
+      DATABASE_URL: mysql+pymysql://nids_user:nids_password_123@db:3306/nids
+      SECRET_KEY: nids-super-secret-key-for-local-development-change-me
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 120
+      SNIFFER_INTERFACE: "" # Blank interface defaults to dynamic sniffer + simulation fallback
+    # Networking permissions to allow Scapy raw packet sniffing in container namespaces (Linux hosts)
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      # Robust Python-based HTTP check, avoiding reliance on curl/wget in slim image
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/').getcode()"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # 3. React Frontend Nginx Web Server Service
+  frontend:
+    build: ./frontend
+    container_name: nids-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  mysql_data:

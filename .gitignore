@@ -1,0 +1,52 @@
+# Python virtual environment
+venv/
+.venv/
+ENV/
+env/
+
+# Python cache & compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Node packages and frontend build outputs
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+dist-ssr/
+*.local
+
+# Secrets and environment configs
+.env
+backend/.env
+frontend/.env
+*.env.local
+
+# Databases and local state
+backend/*.db
+backend/nids.db
+*.sqlite3
+
+# Logs & temp files
+*.log
+logs/
+backend/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor specific configurations
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
