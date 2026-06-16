@@ -72,7 +72,6 @@ class PacketSnifferDaemon:
         except Exception as e:
             error_msg = f"Scapy sniffer crashed on interface {interface or 'Default'}: {e}"
             print(f"[Sniffer Daemon] {error_msg}")
-            self.is_running = False
             
             # Write a critical audit log event to the database
             db = SessionLocal()

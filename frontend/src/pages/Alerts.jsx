@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { 
-  ShieldAlert, 
-  AlertTriangle, 
-  Trash2, 
-  Eye, 
+import {
+  ShieldAlert,
+  AlertTriangle,
+  Trash2,
+  Eye,
   X
 } from 'lucide-react';
 import { alertsService } from '../services/api';
@@ -16,7 +16,7 @@ const Alerts = () => {
   // Filters
   const [statusFilter, setStatusFilter] = useState('');
   const [severityFilter, setSeverityFilter] = useState('');
-  
+
   // Modal Edit State
   const [editStatus, setEditStatus] = useState('');
   const [editNotes, setEditNotes] = useState('');
@@ -59,7 +59,7 @@ const Alerts = () => {
   const handleDeleteAlert = async (id, e) => {
     e.stopPropagation(); // prevent modal trigger
     if (!confirm('Are you sure you want to permanently delete this alert record?')) return;
-    
+
     try {
       await alertsService.deleteAlert(id);
       setAlerts(prev => prev.filter(a => a.id !== id));
@@ -71,7 +71,7 @@ const Alerts = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-      
+
       {/* Filters row */}
       <div className="glass-panel" style={{
         display: 'flex',
@@ -84,7 +84,7 @@ const Alerts = () => {
           <ShieldAlert size={20} color="var(--primary)" />
           <h4 style={{ fontSize: '1rem', fontWeight: 700 }}>Filter Intrusion Records</h4>
         </div>
-        
+
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           {/* Status filter dropdown */}
           <select
@@ -164,11 +164,11 @@ const Alerts = () => {
                 }
 
                 return (
-                  <tr 
-                    key={alert.id} 
+                  <tr
+                    key={alert.id}
                     onClick={() => handleOpenDetails(alert)}
-                    style={{ 
-                      borderBottom: '1px solid var(--border-color)', 
+                    style={{
+                      borderBottom: '1px solid var(--border-color)',
                       cursor: 'pointer',
                       transition: 'var(--transition)'
                     }}
@@ -211,7 +211,7 @@ const Alerts = () => {
                         }}>
                           <Eye size={16} />
                         </button>
-                        <button 
+                        <button
                           onClick={(e) => handleDeleteAlert(alert.id, e)}
                           style={{
                             background: 'none', border: 'none', color: 'var(--color-critical)', cursor: 'pointer', padding: '4px'
@@ -250,70 +250,75 @@ const Alerts = () => {
           zIndex: 100,
           padding: '20px'
         }}>
-          <div className="glass-panel" style={{
+          <div className="glass-panel animate-fade-in" style={{
             width: '100%',
-            maxWidth: '600px',
-            padding: '30px',
+            maxWidth: '850px',
+            padding: '36px',
             backgroundColor: 'var(--bg-secondary)',
-            position: 'relative'
+            position: 'relative',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(6, 182, 212, 0.12)',
+            border: '1px solid rgba(6, 182, 212, 0.25)'
           }}>
-            <button 
+            <button
               onClick={() => setSelectedAlert(null)}
               style={{
                 position: 'absolute',
-                top: '20px',
-                right: '20px',
+                top: '24px',
+                right: '24px',
                 background: 'none',
                 border: 'none',
                 color: 'var(--text-secondary)',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'var(--transition)'
               }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
             >
-              <X size={20} />
+              <X size={22} />
             </button>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px' }}>
-              <AlertTriangle size={24} color="var(--color-critical)" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '24px', borderBottom: '1px solid var(--border-color)', paddingBottom: '20px' }}>
+              <AlertTriangle size={28} color="var(--color-critical)" />
               <div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Threat Classification Report</h3>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Record ID: {selectedAlert.id}</span>
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800 }}>Threat Classification Report</h3>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Record ID: {selectedAlert.id}</span>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '28px' }}>
               <div>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>ATTACK CATEGORY</span>
-                <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-critical)' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>ATTACK CATEGORY</span>
+                <p style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-critical)', marginTop: '4px' }}>
                   {selectedAlert.attack_type?.name}
                 </p>
               </div>
               <div>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>ALERT SEVERITY</span>
-                <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>ALERT SEVERITY</span>
+                <p style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
                   {selectedAlert.severity}
                 </p>
               </div>
               <div>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>TRAFFIC ORIGIN (SOURCE)</span>
-                <p style={{ fontSize: '0.9rem', fontWeight: 600 }} className="text-mono">
-                  {selectedAlert.traffic_log?.src_ip}:{selectedAlert.traffic_log?.src_port}
-                </p>
-              </div>
-              <div>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>TARGET DESTINATION</span>
-                <p style={{ fontSize: '0.9rem', fontWeight: 600 }} className="text-mono">
-                  {selectedAlert.traffic_log?.dst_ip}:{selectedAlert.traffic_log?.dst_port}
-                </p>
-              </div>
-              <div>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>PROTOCOL & PORT</span>
-                <p style={{ fontSize: '0.9rem', fontWeight: 600 }} className="text-mono">
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>PROTOCOL & PORT</span>
+                <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--primary)', marginTop: '4px' }} className="text-mono">
                   {selectedAlert.traffic_log?.protocol} (Port {selectedAlert.traffic_log?.dst_port})
                 </p>
               </div>
               <div>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>FLOW STATISTICS</span>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }} className="text-mono">
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>TRAFFIC ORIGIN (SOURCE)</span>
+                <p style={{ fontSize: '1.1rem', fontWeight: 700, marginTop: '4px' }} className="text-mono">
+                  {selectedAlert.traffic_log?.src_ip}:{selectedAlert.traffic_log?.src_port}
+                </p>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>TARGET DESTINATION</span>
+                <p style={{ fontSize: '1.1rem', fontWeight: 700, marginTop: '4px' }} className="text-mono">
+                  {selectedAlert.traffic_log?.dst_ip}:{selectedAlert.traffic_log?.dst_port}
+                </p>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>FLOW STATISTICS</span>
+                <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '4px' }} className="text-mono">
                   {selectedAlert.traffic_log?.total_packets} pkts | {(selectedAlert.traffic_log?.total_bytes / 1024).toFixed(1)} KB
                 </p>
               </div>
@@ -329,8 +334,8 @@ const Alerts = () => {
                   {selectedAlert.history.map((h, i) => (
                     <div key={i} style={{ fontSize: '0.8rem', backgroundColor: 'var(--bg-primary)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ 
-                          fontWeight: 700, 
+                        <span style={{
+                          fontWeight: 700,
                           color: h.status === 'RESOLVED' ? 'var(--color-benign)' : (h.status === 'INVESTIGATING' ? 'var(--color-medium)' : 'var(--color-critical)'),
                           fontSize: '0.75rem'
                         }}>

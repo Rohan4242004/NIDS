@@ -175,6 +175,7 @@ manager = ConnectionManager()
 import asyncio
 def forward_event_to_websockets(payload):
     global main_loop
+    print(f"[WS Broadcaster] Dispatching event: {payload.get('event')}, Active sockets: {len(manager.active_connections)}")
     if main_loop and main_loop.is_running():
         asyncio.run_coroutine_threadsafe(manager.broadcast(payload), main_loop)
     else:
